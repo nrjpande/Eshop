@@ -12,6 +12,7 @@ const app  = new express();
 app.use(express.json());
 
 require("./routes/auth.route")(app);
+require("./routes/address.route")(app);
 
 // Using body-parser middleware to parse request bodies
 

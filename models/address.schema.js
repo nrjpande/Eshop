@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const addSchema = new mongoose.Schema({
    addId :{
     type:Number,
-    require:true,
     unique:true 
    },
    city:{
@@ -13,7 +12,6 @@ const addSchema = new mongoose.Schema({
    },
 landmark :{
     type:String,
-    require:true,
     lowercase:true
 },
 name :{
@@ -26,7 +24,7 @@ state:{
     require:true,
     lowercase:true
 },
-phoneNumber : {
+contactNumber : {
     type:String,
     require:true,
     unique:true
@@ -36,7 +34,7 @@ street :{
     require:true
 },
 zipCode :{
-    type:String,
+    type:Number,
     require:true
 },
 userId:{

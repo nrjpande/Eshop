@@ -9,15 +9,6 @@ const secretConfig = require('../configs/Auth.configs');
 
 //SignUp API
 
-function validateEmail(email){
-
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-z]{2,6}$/;
-    if (!regex.test(email)) {
-      return "invalid";
-    } else {
-      return "valid";
-    }
-}
 
 async function signup(req, res) {
 
@@ -31,25 +22,13 @@ async function signup(req, res) {
         console.log("Email Id Already Registered!");
         return [JSON.stringify({ message: "Try any other email, this email is already registered!" }), 400];
     }
-    
-    if(validateEmail(emailReq) == "invalid"){
-        console.log("Email invalid!");
-        return [JSON.stringify({ message: 'Invalid email-id format!' }), 400];
-    }
-
-    const contactNumberReq = req.body.contactNumber;
-
-    if(!isNaN(contactNumberReq) && contactNumberReq.length !== 10){
-        console.log("Invalid phone number!");
-        return [JSON.stringify({ message: 'Invalid contact number!' }), 400];
-    }
 
     const UserObj = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        email: emailReq,
+        email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 8),
-        contactNumber: contactNumberReq,
+        contactNumber: req.body.contactNumber,
         userId : req.body.userId,
         role :req.body.role !=undefined ? req.body.role : "USER"
     };
@@ -63,12 +42,12 @@ async function signup(req, res) {
             userId : user.userId
 
         });
-    } catch (err) {
-        console.log("Error Creating User", err);
-        res.status(500).send({
-            message: "Internal Server Error"
-        })
-    }
+        } catch (err) {
+            console.log("Error Creating User", err);
+            res.status(500).send({
+                message: "Internal Server Error"
+            })
+        }
 }
 
 module.exports = {
@@ -77,6 +56,8 @@ module.exports = {
 };
 
 async function signIn(req, res) {
+
+    try{
 
     const user = await User.findOne({ email: req.body.email });
 
@@ -103,4 +84,10 @@ async function signIn(req, res) {
         name: user.firstName+ " " +user.lastName ,
         isAuthenticated : true        
     });
+}catch (err) {
+    console.log("Error Signing in the User", err);
+    res.status(500).send({
+        message: "Internal Server Error"
+    })
+}
 }
