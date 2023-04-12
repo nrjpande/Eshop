@@ -20,7 +20,9 @@ function validateEmail(email){
 }
 
 async function signup(req, res) {
-try{
+
+    try{
+
     const emailReq = req.body.email;
 
     const userCheck = await User.find({email : emailReq});
@@ -29,16 +31,16 @@ try{
         console.log("Email Id Already Registered!");
         return [JSON.stringify({ message: "Try any other email, this email is already registered!" }), 400];
     }
-
+    
     if(validateEmail(emailReq) == "invalid"){
         console.log("Email invalid!");
         return [JSON.stringify({ message: 'Invalid email-id format!' }), 400];
     }
 
-    const phoneNumberReq = req.body.phoneNumber;
+    const contactNumberReq = req.body.contactNumber;
 
-    if(!isNaN(phoneNumberReq) && phoneNumberReq.length !== 10){
-        console.log("Email phone number!");
+    if(!isNaN(contactNumberReq) && contactNumberReq.length !== 10){
+        console.log("Invalid phone number!");
         return [JSON.stringify({ message: 'Invalid contact number!' }), 400];
     }
 
@@ -47,16 +49,18 @@ try{
         lastName: req.body.lastName,
         email: emailReq,
         password: bcrypt.hashSync(req.body.password, 8),
-        phoneNumber: phoneNumberReq
+        contactNumber: contactNumberReq,
+        userId : req.body.userId,
+        role :req.body.role !=undefined ? req.body.role : "USER"
     };
 
-    
         const user = await User.create(UserObj);
 
         res.status(200).send({
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            userId : user.userId
 
         });
     } catch (err) {
@@ -74,30 +78,29 @@ module.exports = {
 
 async function signIn(req, res) {
 
-    const user = await User.findOne({ userName: req.body.userName });
+    const user = await User.findOne({ email: req.body.email });
 
     if (user == null) {
         res.status(400).send({
-            message: "Userid doesn't exist."
+            message: "This email has not been registered!"
         });
     }
 
     if (!bcrypt.compareSync(req.body.password, user.password)) {
-        return res.status(200).send({
-            message: "Invalid Password."
+        return res.status(401).send({
+            message: "Invalid Credentials!"
         });
     }
 
-    var token = jwt.sign({ userName: user.userName, someData: "Important" },
+    var token = jwt.sign({ email: user.email, someData: "Important" },
         secretConfig.secret,
         { expiresIn: 5000 }
     );
 
+    res.set('x-auth-token', token);
     res.status(200).send({
-        name: user.name,
-        userId: user.userId,
-        email: user.email,
-
-        accessToken: token,
+        email : user.email,
+        name: user.firstName+ " " +user.lastName ,
+        isAuthenticated : true        
     });
 }
