@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-   productId :{
-    type:Number,
-    require:true,
-    unique:true 
-   },
+//    productId :{
+//     type:Number,
+//     unique:true 
+//    },
 category :{
     type:String,
     require:true,
@@ -28,16 +27,14 @@ name:{
 availableItems : {
     type:Number,
     require:true,
-    unique:true
 },
 imageUrl :{
     type:String,
     require:true
 },
-manufacture:{
+manufacturer:{
     type : String,
     require:true,
-    unique:true
 },
 createdAt:{
     type:Date,

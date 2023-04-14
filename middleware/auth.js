@@ -58,11 +58,23 @@ verifyZipCode = (req, res, next)=>{
     next();
 }
 
+isAdmin = async (req, res, next)=>{
+
+    const user = await  User.findOne({email:req.email});
+
+    if(!user || user.role!= 'ADMIN'){
+        console.log('You are not authorised to access this endpoint!');
+        return [JSON.stringify({message : 'You are not authorised to access this endpoint!'}, 401)];
+    }   
+    next();
+}
+
 const authCheck = {
     verifyToken:verifyToken,
     verifyZipCode:verifyZipCode,
     verifyContactNumber:verifyContactNumber,
-    validateEmail:validateEmail
+    validateEmail:validateEmail,
+    isAdmin:isAdmin
 }
 
 module.exports = authCheck;
