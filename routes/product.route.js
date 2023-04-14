@@ -15,4 +15,5 @@ module.exports = function (app) {
     app.delete('/products/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin], productController.deleteProductByID)
 
     app.get('/products', productController.searchProducts);
+    
 }

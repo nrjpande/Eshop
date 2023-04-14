@@ -9,7 +9,6 @@ const secretConfig = require('../configs/Auth.configs');
 
 //SignUp API to add a user or an admin
 
-
 async function signup(req, res) {
 
     try {
