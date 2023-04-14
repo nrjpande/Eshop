@@ -1,28 +1,15 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-   orderId :{
-    type:Number,
-    require:true,
-    unique:true 
-   },
-productId :{
-    type:Number,
-    require:true,
-    unique:true
-},
 orderAmount :{
-    type:Number,
-    require:true,
+    type:Number
 },
 addressId :{
-    type:Number,
+    type:String,
     require:true
 },
 userId :{
-    type:Number,
-    require:true,
-    unique:true 
+    type:String
    },
 
 orderDate:{

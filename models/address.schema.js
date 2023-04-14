@@ -38,9 +38,7 @@ zipCode :{
     require:true
 },
 userId:{
-    type : String,
-    require:true,
-    unique:true
+    type : String
 },
 createdAt:{
     type:Date,
